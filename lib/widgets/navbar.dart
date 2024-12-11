@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../pages/profile_page.dart'; // Importez la page de profil
-import '../pages/home_page.dart'; // Importez la page d'accueil (ajoutez cette ligne si elle n'est pas déjà importée)
+import '../pages/profile_page.dart'; // Page de profil
+import '../pages/home_page.dart'; // Page d'accueil
+import '../pages/login_page.dart'; // Page de login
 
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({super.key});
@@ -30,47 +31,37 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: 'Profile',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.more_horiz, color: Colors.grey),
-          label: 'More',
+          icon: Icon(Icons.login, color: Colors.grey), // Icône de login
+          label: 'Login',
         ),
       ],
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.grey,
       showUnselectedLabels: true,
       onTap: (index) {
-        if (index == 0) {
-          // Si l'élément "Home" est sélectionné (index 0)
+        Widget? targetPage;
+
+        switch (index) {
+          case 0:
+            targetPage = const TwitterHomePage();
+            break;
+          case 4:
+            targetPage = const TwitterProfilePage();
+            break;
+          case 5:
+            targetPage = const LoginPage(); // Naviguer vers la page de login
+            break;
+        }
+
+        if (targetPage != null) {
           Navigator.push(
             context,
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  const TwitterHomePage(),
+                  targetPage!,
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
-                const begin = Offset(
-                    1.0, 0.0); // Transition horizontale (de droite à gauche)
-                const end = Offset.zero;
-                const curve = Curves.easeInOut;
-
-                var tween = Tween(begin: begin, end: end)
-                    .chain(CurveTween(curve: curve));
-                var offsetAnimation = animation.drive(tween);
-
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-            ),
-          );
-        } else if (index == 4) {
-          // Si l'élément "Profile" est sélectionné (index 4)
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  const TwitterProfilePage(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                const begin = Offset(
-                    1.0, 0.0); // Transition horizontale (de droite à gauche)
+                const begin = Offset(1.0, 0.0); // De droite à gauche
                 const end = Offset.zero;
                 const curve = Curves.easeInOut;
 
