@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../services/api_service.dart';
+import '../services/token_service.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,6 +14,28 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final bool _isLoading = false;
+  String? _token; // Variable to store and display the token
+
+  Future<void> _login() async {
+    final token = await ApiService.fetchToken(
+      _usernameController.text,
+      _passwordController.text,
+    );
+
+    if (token != null) {
+      await TokenService.saveToken(token);
+      setState(() {
+        _token = token;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Connexion réussie !')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erreur de connexion.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
             // Logo
             const Center(
               child: Icon(
-                Icons.alternate_email,
+                FontAwesomeIcons.twitter,
                 color: Colors.blue,
                 size: 80,
               ),
@@ -67,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
             _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _login,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -89,6 +114,13 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(color: Colors.blue),
               ),
             ),
+
+            // Display token conditionally
+            if (_token != null)
+              Text(
+                "Token: $_token",
+                style: const TextStyle(fontSize: 16),
+              ),
           ],
         ),
       ),
