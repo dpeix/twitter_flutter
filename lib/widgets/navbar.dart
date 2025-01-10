@@ -43,10 +43,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
         switch (index) {
           case 0:
-            targetPage = const TwitterHomePage();
+            targetPage = const DataScreen();
             break;
           case 4:
-            targetPage = const TwitterProfilePage();
+            targetPage = const UserProfilePage();
             break;
           case 5:
             targetPage = const LoginPage(); // Naviguer vers la page de login

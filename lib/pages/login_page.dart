@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twitter_flutter/pages/home_page.dart';
 import '../services/api_service.dart';
 import '../services/token_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,6 +28,10 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _token = token;
       });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const DataScreen()),
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Connexion réussie !')),
       );
